@@ -1,0 +1,17 @@
+final List<String> genresList = [
+  'Young Adult',
+  'Romance',
+  'Science Fiction',
+  'Fantasy',
+  'Mystery',
+  'Dystopian',
+  'Thriller',
+  'Historical Fiction',
+  'Literary Fiction',
+  'Classics',
+  'Children\'s Literature',
+  'Comedy',
+  'Horror',
+  'Psychological Thriller',
+  'Suspense',
+];

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "620251768092",
+    "project_id": "novel-app-790f1",
+    "storage_bucket": "novel-app-790f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:620251768092:android:dd98f5df6a07be8296c6d9",
+        "android_client_info": {
+          "package_name": "com.bethanie.novel_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDnKrQppUxbHKMVylNy45DBemdZ-kEc30"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
