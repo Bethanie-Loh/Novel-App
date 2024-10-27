@@ -63,7 +63,7 @@ class AppDisplayBooks extends StatelessWidget {
       context.pushNamed(
         ViewBookScreen.route,
         pathParameters: {'bookId': bookId},
-        extra: {'isAuthor': false, 'isSaved': false, 'isWriting': false},
+        extra: {'isSaved': false, 'isWriting': false},
       );
     }
 

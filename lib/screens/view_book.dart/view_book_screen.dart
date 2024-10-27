@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:novel_app/controllers/global_data_controller.dart';
 import 'package:novel_app/core/service/auth_service.dart';
 import 'package:novel_app/data/model/book.dart';
+import 'package:novel_app/data/model/user.dart';
+import 'package:novel_app/data/repo/user_repo.dart';
 import 'package:novel_app/screens/edit_book/edit_book_screen.dart';
 import 'package:novel_app/screens/read/read_screen.dart';
 import 'package:novel_app/screens/view_book.dart/like_review_controller.dart';
@@ -17,14 +19,12 @@ import 'package:novel_app/widgets/app_review.dart';
 
 class ViewBookScreen extends ConsumerStatefulWidget {
   final String bookId;
-  final bool isAuthor;
   final bool isSaved;
   final bool isWriting;
 
   const ViewBookScreen({
     super.key,
     required this.bookId,
-    required this.isAuthor,
     required this.isSaved,
     required this.isWriting,
   });
@@ -37,9 +37,11 @@ class _ViewBookScreenState extends ConsumerState<ViewBookScreen> {
   final _globalDataController = GlobalDataController();
   final _viewBookController = ViewBookController();
   final _reviewController = LikeReviewController();
+  final _userRepo = UserRepo();
 
   Book? book;
   bool _isLoading = false;
+  bool isAuthor = false;
   bool isSaved = false;
   String _userId = '';
   bool _isPublished = false;
@@ -57,6 +59,7 @@ class _ViewBookScreenState extends ConsumerState<ViewBookScreen> {
 
   Future<Book?> _fetchBook() async {
     _userId = AuthService().getUid()!;
+    debugPrint("_userId at viewbook: $_userId");
     setState(() => _isLoading = true);
     try {
       final fetchedBook =
@@ -64,8 +67,12 @@ class _ViewBookScreenState extends ConsumerState<ViewBookScreen> {
 
       debugPrint("fetchedBook: $fetchedBook");
       debugPrint("this book publish status: ${fetchedBook!.isPublished}");
+
+      final AppUser? user = await _userRepo.getUserById(_userId);
+
       setState(() {
         book = fetchedBook;
+        isAuthor = user!.name == book!.author! ? true : false;
         book!.savedUserIds?.contains(_userId) == true
             ? isSaved = true
             : isSaved = false;
@@ -301,7 +308,7 @@ class _ViewBookScreenState extends ConsumerState<ViewBookScreen> {
                                 )
                               : const Column(),
                           const SizedBox(height: 50),
-                          widget.isAuthor
+                          isAuthor
                               ? Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [

@@ -111,13 +111,12 @@ class Navigation {
       builder: (_, state) {
         final bookId = state.pathParameters['bookId']!;
         final extraMap = state.extra! as Map<String, dynamic>;
-        final isAuthor = extraMap['isAuthor'] as bool;
+
         final isSaved = extraMap['isSaved'] as bool;
         final isWriting = extraMap['isWriting'] as bool;
 
         return ViewBookScreen(
           bookId: bookId,
-          isAuthor: isAuthor,
           isSaved: isSaved,
           isWriting: isWriting,
         );
