@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/quill_delta.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:novel_app/controllers/global_data_controller.dart';
 import 'package:novel_app/core/service/auth_service.dart';
 import 'package:novel_app/data/model/book.dart';
+import 'package:novel_app/data/model/chapter.dart';
 import 'package:novel_app/data/model/user.dart';
 import 'package:novel_app/data/repo/user_repo.dart';
 import 'package:novel_app/screens/edit_book/edit_book_screen.dart';
@@ -12,6 +15,7 @@ import 'package:novel_app/screens/view_book.dart/view_book_controller.dart';
 import 'package:novel_app/utils/app_colors.dart';
 import 'package:novel_app/utils/app_loading.dart';
 import 'package:novel_app/utils/app_text_styles.dart';
+import 'package:novel_app/utils/delta_to_html_converter.dart';
 import 'package:novel_app/widgets/app_appbar.dart';
 import 'package:novel_app/widgets/app_drawer.dart';
 import 'package:go_router/go_router.dart';
@@ -64,9 +68,6 @@ class _ViewBookScreenState extends ConsumerState<ViewBookScreen> {
     try {
       final fetchedBook =
           await _globalDataController.getBookById(widget.bookId);
-
-      debugPrint("fetchedBook: $fetchedBook");
-      debugPrint("this book publish status: ${fetchedBook!.isPublished}");
 
       final AppUser? user = await _userRepo.getUserById(_userId);
 
@@ -121,6 +122,46 @@ class _ViewBookScreenState extends ConsumerState<ViewBookScreen> {
       _like = !_like;
       _likeCount = _like ? _likeCount! + 1 : _likeCount! - 1;
     });
+  }
+
+  Future<void> _showExcerptDialog() async {
+    Chapter? firstChapter;
+    setState(() => _isLoading = true);
+    try {
+      firstChapter = await _viewBookController.getFirstChapter(widget.bookId);
+    } catch (e) {
+      debugPrint('Error fetching first chapter: $e');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            "Chapter 1 Excerpt",
+            style: AppTextStyles.bold_20,
+          ),
+          content: _isLoading
+              ? const AppLoading()
+              : SingleChildScrollView(
+                  child: HtmlWidget(
+                    DeltaToHtmlConverter.extractFormattedText(
+                        firstChapter?.content ?? Delta()),
+                  ),
+                ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text("Close",
+                  style: AppTextStyles.italic_bold_16
+                      .copyWith(color: AppColors.mulberry)),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -242,7 +283,26 @@ class _ViewBookScreenState extends ConsumerState<ViewBookScreen> {
                                     ),
                                   ],
                                 )
-                              : const Row(),
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                      OutlinedButton(
+                                          onPressed: () => _showExcerptDialog(),
+                                          style: ButtonStyle(
+                                            padding: WidgetStateProperty.all(
+                                                const EdgeInsets.symmetric(
+                                                    horizontal: 25,
+                                                    vertical: 0)),
+                                            side: const WidgetStatePropertyAll(
+                                                BorderSide.none),
+                                            backgroundColor:
+                                                const WidgetStatePropertyAll(
+                                                    AppColors.emerald),
+                                          ),
+                                          child: const Text("Read Excerpt",
+                                              style: AppTextStyles
+                                                  .italic_bold_16)),
+                                    ]),
                           const SizedBox(height: 10),
                           const Text("Summary:", style: AppTextStyles.bold_18),
                           const SizedBox(height: 10),

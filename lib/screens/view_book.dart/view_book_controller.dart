@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:novel_app/constants/app_strings.dart';
 import 'package:novel_app/core/service/auth_service.dart';
 import 'package:novel_app/data/model/book.dart';
+import 'package:novel_app/data/model/chapter.dart';
 import 'package:novel_app/data/repo/book_repo.dart';
 import 'package:novel_app/screens/tab_container_screen.dart';
 import 'package:novel_app/utils/app_date.dart';
@@ -10,6 +11,20 @@ import 'package:go_router/go_router.dart';
 
 class ViewBookController {
   final _bookRepo = BookRepo();
+
+  Future<Chapter?> getFirstChapter(String bookId) async {
+    try {
+      final book = await _bookRepo.getBookById(bookId);
+      if (book != null && book.chapters.isNotEmpty) {
+        return book.chapters.firstWhere((chapter) => chapter.id == 1);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      debugPrint('Error fetching first chapter: $e');
+      return null;
+    }
+  }
 
   Future<void> saveBookToLibrary(
       BuildContext context, bool isSaved, Book book) async {
