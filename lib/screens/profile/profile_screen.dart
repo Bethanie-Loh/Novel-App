@@ -108,89 +108,90 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Stack(
                   children: [
                     Center(
-                      child: Column(
-                        children: [
-                          Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(100),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.periwinkle.withOpacity(0.3),
-                                  blurRadius: 4,
-                                  spreadRadius: 3,
-                                  offset: const Offset(2, 3),
-                                ),
-                              ],
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(100),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.periwinkle.withOpacity(0.3),
+                                    blurRadius: 4,
+                                    spreadRadius: 3,
+                                    offset: const Offset(2, 3),
+                                  ),
+                                ],
+                              ),
+                              child: SizedBox(
+                                  width: 100,
+                                  height: 100,
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: _user != null &&
+                                            _user!.profilePicture != null &&
+                                            _user!.profilePicture!.isNotEmpty
+                                        ? Image.network(
+                                            _user!.profilePicture!,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          )
+                                        : Image.asset(
+                                            "assets/images/sky.jpg",
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: double.infinity,
+                                          ),
+                                  )),
                             ),
-                            child: SizedBox(
-                                width: 100,
-                                height: 100,
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: _user != null &&
-                                          _user!.profilePicture != null &&
-                                          _user!.profilePicture!.isNotEmpty
-                                      ? Image.network(
-                                          _user!.profilePicture!,
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                        )
-                                      : Image.asset(
-                                          "assets/images/sky.jpg",
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                          height: double.infinity,
-                                        ),
-                                )),
-                          ),
-                          const SizedBox(height: 30),
-                          Text("${_user?.name}",
-                              style: AppTextStyles.italic_bold_24
-                                  .copyWith(color: AppColors.white)),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: 250,
-                            child: Card(
-                              elevation: 10,
-                              shadowColor: AppColors.white,
-                              color: AppColors.mulberry,
-                              child: Padding(
-                                padding: const EdgeInsets.all(16),
-                                child: Center(
-                                  child: Text(
-                                    _user?.quote != null
-                                        ? "${_user?.quote}"
-                                        : "You have no quote yet",
-                                    textAlign:
-                                        TextAlign.center, // Center the text
-                                    style: AppTextStyles.italic_bold_14
-                                        .copyWith(color: AppColors.yellow),
+                            const SizedBox(height: 30),
+                            Text("${_user?.name}",
+                                style: AppTextStyles.italic_bold_24
+                                    .copyWith(color: AppColors.white)),
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: 250,
+                              child: Card(
+                                elevation: 10,
+                                shadowColor: AppColors.white,
+                                color: AppColors.mulberry,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Center(
+                                    child: Text(
+                                      _user?.quote != null
+                                          ? "${_user?.quote}"
+                                          : "You have no quote yet",
+                                      textAlign:
+                                          TextAlign.center, // Center the text
+                                      style: AppTextStyles.italic_bold_14
+                                          .copyWith(color: AppColors.yellow),
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 40),
-                          widget.userId!.isEmpty
-                              ? Text("Born In: ${_user?.dob}",
-                                  style: AppTextStyles.bold_16)
-                              : const Text(""),
-                          const SizedBox(height: 20),
-                          Text("Joined: $_joinedDate",
-                              style: AppTextStyles.bold_16),
-                          const SizedBox(height: 20),
-                          SizedBox(
-                            width: 350,
-                            child: Text(
-                              "Favourite Genres: \n${_user?.favouriteGenres.join(", ")}",
-                              textAlign: TextAlign
-                                  .center, // Center the favorite genres text
-                              style: AppTextStyles.bold_16,
+                            const SizedBox(height: 40),
+                            widget.userId!.isEmpty
+                                ? Text("Born In: ${_user?.dob}",
+                                    style: AppTextStyles.bold_16)
+                                : const Text(""),
+                            const SizedBox(height: 20),
+                            Text("Joined: $_joinedDate",
+                                style: AppTextStyles.bold_16),
+                            const SizedBox(height: 20),
+                            SizedBox(
+                              width: 350,
+                              child: Text(
+                                "Favourite Genres: \n${_user?.favouriteGenres.join(", ")}",
+                                textAlign: TextAlign.center,
+                                style: AppTextStyles.bold_16,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 40),
-                        ],
+                            const SizedBox(height: 90),
+                          ],
+                        ),
                       ),
                     ),
                     Positioned(

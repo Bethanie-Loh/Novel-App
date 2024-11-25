@@ -155,8 +155,10 @@ class _MyQuillEditorState extends ConsumerState<MyQuillEditor> {
       builder: (BuildContext context) => buildGeminiChat(),
       backgroundColor: AppColors.periwinkle,
     ).then((_) {
-      ref.read(writeBookNotifierProvider.notifier).toggleGeminiAI();
-      ref.read(writeBookNotifierProvider.notifier).setGeminiAIShown(false);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(writeBookNotifierProvider.notifier).toggleGeminiAI();
+        ref.read(writeBookNotifierProvider.notifier).setGeminiAIShown(false);
+      });
     });
   }
 

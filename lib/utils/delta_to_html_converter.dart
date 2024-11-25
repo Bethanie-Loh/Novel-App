@@ -39,6 +39,9 @@ class DeltaToHtmlConverter {
             style += 'background-color: ${op.attributes!['background']};';
           }
 
+          // text = text.replaceAll(' ', '&nbsp;');
+          text = text.replaceAll('\n', '<br>');
+
           if (op.attributes!.containsKey('align')) {
             text =
                 '<div style="text-align: ${op.attributes!['align']};">$text</div>';

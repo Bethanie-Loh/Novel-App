@@ -69,11 +69,11 @@ class _ReadScreenState extends ConsumerState<ReadScreen> {
       final fetchedBook =
           await _globalDataController.getBookById(widget.bookId);
 
-      debugPrint("fetchedBook: $fetchedBook");
+      // debugPrint("fetchedBook: $fetchedBook");
 
       setState(() {
         _book = fetchedBook;
-        debugPrint("book after fetched: $_book");
+        // debugPrint("book after fetched: $_book");
 
         _isLoading = false;
       });

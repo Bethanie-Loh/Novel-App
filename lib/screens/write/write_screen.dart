@@ -166,7 +166,7 @@ class _WriteScreenState extends ConsumerState<WriteScreen> {
         content: documentDelta,
         totalPages: (charCount / 1500).ceil());
 
-    debugPrint('Saving Chapter: ${chapter.toMap()}');
+    // debugPrint('Saving Chapter: ${chapter.toMap()}');
 
     _writeController.updateBook(
       book!,

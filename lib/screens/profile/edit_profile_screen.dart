@@ -68,8 +68,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     });
   }
 
-
-
   void _editProfile() async {
     await _editProfileController.updateUser(_nameController.text, _imageUrl!,
         _dob!, _quoteController.text, _selectedGenres, context);
@@ -100,98 +98,100 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           backgroundColor: AppColors.mystery,
           body: Container(
               margin: const EdgeInsets.all(30),
-              child: Stack(
-                children: [
-                  Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(100),
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.periwinkle.withOpacity(0.3),
-                                blurRadius: 4,
-                                spreadRadius: 3,
-                                offset: const Offset(2, 3),
-                              ),
-                            ],
+              child: SingleChildScrollView(
+                child: Stack(
+                  children: [
+                    Center(
+                      child: Column(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.periwinkle.withOpacity(0.3),
+                                  blurRadius: 4,
+                                  spreadRadius: 3,
+                                  offset: const Offset(2, 3),
+                                ),
+                              ],
+                            ),
+                            child: SizedBox(
+                              width: 100,
+                              height: 100,
+                              child: GestureDetector(
+                                  onTap: () => _uploadBookCover(ref),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(100),
+                                    child: isUploading
+                                        ? const AppLoading()
+                                        : _imageUrl == null ||
+                                                !_isValidUrl(_imageUrl!)
+                                            ? Image.asset(
+                                                "assets/images/sky.jpg",
+                                                fit: BoxFit.cover,
+                                                width: 130,
+                                                height: 180,
+                                              )
+                                            : Image.network(
+                                                _imageUrl!,
+                                                fit: BoxFit.cover,
+                                                width: 130,
+                                                height: 180,
+                                              ),
+                                  )),
+                            ),
                           ),
-                          child: SizedBox(
-                            width: 100,
-                            height: 100,
-                            child: GestureDetector(
-                                onTap: () => _uploadBookCover(ref),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: isUploading
-                                      ? const AppLoading()
-                                      : _imageUrl == null ||
-                                              !_isValidUrl(_imageUrl!)
-                                          ? Image.asset(
-                                              "assets/images/sky.jpg",
-                                              fit: BoxFit.cover,
-                                              width: 130,
-                                              height: 180,
-                                            )
-                                          : Image.network(
-                                              _imageUrl!,
-                                              fit: BoxFit.cover,
-                                              width: 130,
-                                              height: 180,
-                                            ),
-                                )),
+                          const SizedBox(height: 30),
+                          AppTextfield(
+                              hintText: "Name",
+                              obscureText: false,
+                              controller: _nameController),
+                          // AppDatePicker(
+                          //   dob: _dob != null ? DateTime.parse(_dob!) : null,
+                          //   hintText: 'D.O.B',
+                          //   onDateChanged: (date) {
+                          //     setState(() => _dob = date);
+                          //   },
+                          // ),
+                          SizedBox(
+                              width: double.infinity,
+                              child: AppTextfield(
+                                  longText: true,
+                                  hintText: "Put a quote to inspire yourself",
+                                  obscureText: false,
+                                  controller: _quoteController)),
+                          AppGenrePicker(
+                            editBook: false,
+                            genres: genresList,
+                            selectedGenres: _selectedGenres,
+                            onGenresSelected: (selectedGenres) {
+                              setState(() => _selectedGenres = selectedGenres);
+                            },
                           ),
-                        ),
-                        const SizedBox(height: 30),
-                        AppTextfield(
-                            hintText: "Name",
-                            obscureText: false,
-                            controller: _nameController),
-                        AppDatePicker(
-                          dob: _dob != null ? DateTime.parse(_dob!) : null,
-                          hintText: 'D.O.B',
-                          onDateChanged: (date) {
-                            setState(() => _dob = date);
-                          },
-                        ),
-                        SizedBox(
-                            width: double.infinity,
-                            child: AppTextfield(
-                                longText: true,
-                                hintText: "Put a quote to inspire yourself",
-                                obscureText: false,
-                                controller: _quoteController)),
-                        AppGenrePicker(
-                          editBook: false,
-                          genres: genresList,
-                          selectedGenres: _selectedGenres,
-                          onGenresSelected: (selectedGenres) {
-                            setState(() => _selectedGenres = selectedGenres);
-                          },
-                        ),
-                        const SizedBox(height: 40),
-                      ],
+                          const SizedBox(height: 80),
+                        ],
+                      ),
                     ),
-                  ),
-                  Positioned(
-                    bottom: 0,
-                    left: 100,
-                    right: 100,
-                    child: OutlinedButton(
-                      onPressed: () => _editProfile(),
-                      style: ButtonStyle(
-                          padding: WidgetStateProperty.all(
-                              const EdgeInsets.symmetric(
-                                  horizontal: 25, vertical: 0)),
-                          side: const WidgetStatePropertyAll(BorderSide.none),
-                          backgroundColor:
-                              const WidgetStatePropertyAll(AppColors.emerald)),
-                      child: const Text("Edit Profile",
-                          style: AppTextStyles.italic_bold_16),
+                    Positioned(
+                      bottom: 0,
+                      left: 100,
+                      right: 100,
+                      child: OutlinedButton(
+                        onPressed: () => _editProfile(),
+                        style: ButtonStyle(
+                            padding: WidgetStateProperty.all(
+                                const EdgeInsets.symmetric(
+                                    horizontal: 25, vertical: 0)),
+                            side: const WidgetStatePropertyAll(BorderSide.none),
+                            backgroundColor: const WidgetStatePropertyAll(
+                                AppColors.emerald)),
+                        child: const Text("Edit Profile",
+                            style: AppTextStyles.italic_bold_16),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )));
     });
   }
