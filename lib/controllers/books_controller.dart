@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:novel_app/core/service/auth_service.dart';
-import 'package:novel_app/data/genres.dart';
 import 'package:novel_app/data/model/book.dart';
 import 'package:novel_app/data/model/user.dart';
 import 'package:novel_app/data/repo/book_repo.dart';
