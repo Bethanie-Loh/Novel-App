@@ -43,8 +43,7 @@ class BooksController {
             (book.author?.toLowerCase().contains(lowerCaseQuery) ?? false) ||
             (book.genres?.any(
                     (genre) => genre.toLowerCase().contains(lowerCaseQuery)) ??
-                false) ||
-            (genresList.any((genre) => book.genres?.contains(genre) ?? false));
+                false);
       }).toList();
     } catch (e) {
       debugPrint('Error in searching books: $e');
