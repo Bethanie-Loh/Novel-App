@@ -40,66 +40,72 @@ class _MyQuillEditorState extends ConsumerState<MyQuillEditor> {
   }
 
   void _submitQuery() async {
-    debugPrint("before isLoading at _submitQuery: $_isLoading");
     setState(() => _isLoading = true);
-    debugPrint("after isLoading at _submitQuery: $_isLoading");
-    setState(() {});
-    String query = queryController.text;
-    final gemini = Gemini();
-    String response = await gemini.getGeminiResponse(query);
-    setState(() => _isLoading = false);
 
-    if (mounted) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text(
-              "Gemini AI Response",
-              style: AppTextStyles.bold_20,
-            ),
-            content: SingleChildScrollView(
-              child: Text(
-                response,
-                style: AppTextStyles.italic_bold_16
-                    .copyWith(color: AppColors.black),
+    try {
+      String query = queryController.text;
+      final gemini = Gemini();
+      String response = await gemini.getGeminiResponse(query);
+
+      setState(() => _isLoading = false);
+
+      if (mounted) {
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                "Gemini AI Response",
+                style: AppTextStyles.bold_20,
               ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () async {
-                  Navigator.pop(context);
-                  setState(() => _isLoading = true);
-
-                  await gemini.getGeminiResponse(query);
-                  setState(() => _isLoading = false);
-
-                  _submitQuery();
-                },
+              content: SingleChildScrollView(
                 child: Text(
-                  'Regenerate',
-                  style: AppTextStyles.italic_bold_16.copyWith(
-                    color: AppColors.mulberry,
-                  ),
+                  response,
+                  style: AppTextStyles.italic_bold_16
+                      .copyWith(color: AppColors.black),
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context, 'OK');
-                  _updateQuillWithGeminiResponse(response);
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  'OK',
-                  style: AppTextStyles.italic_bold_16.copyWith(
-                    color: AppColors.mulberry,
+              actions: [
+                TextButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                    setState(() => _isLoading = true);
+
+                    await gemini.getGeminiResponse(query);
+                    setState(() => _isLoading = false);
+
+                    _submitQuery();
+                  },
+                  child: Text(
+                    'Regenerate',
+                    style: AppTextStyles.italic_bold_16.copyWith(
+                      color: AppColors.mulberry,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          );
-        },
-      );
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context, 'OK');
+                    _updateQuillWithGeminiResponse(response);
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'OK',
+                    style: AppTextStyles.italic_bold_16.copyWith(
+                      color: AppColors.mulberry,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } catch (e) {
+      // Handle potential errors from gemini.getGeminiResponse
+      debugPrint("Error fetching Gemini response: $e");
+      setState(() => _isLoading = false);
+      // You might want to show an error message to the user here
     }
   }
 
@@ -116,35 +122,37 @@ class _MyQuillEditorState extends ConsumerState<MyQuillEditor> {
           bottomRight: Radius.zero,
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Ask Gemini AI anything",
-              style: AppTextStyles.italic_bold_16),
-          const SizedBox(height: 15),
-          _isLoading
-              ? const Center(child: AppLoading())
-              : AppTextfield(
-                  hintText: "Help me write...",
-                  obscureText: false,
-                  controller: queryController,
-                  longText: true,
-                  geminiAI: true,
-                ),
-          Center(
-            child: OutlinedButton(
-                onPressed: () => _submitQuery(),
-                style: ButtonStyle(
-                    padding: WidgetStateProperty.all(const EdgeInsets.symmetric(
-                        horizontal: 25, vertical: 0)),
-                    side: const WidgetStatePropertyAll(BorderSide.none),
-                    backgroundColor:
-                        const WidgetStatePropertyAll(AppColors.periwinkle)),
-                child: Text("Ask Gemini",
-                    style: AppTextStyles.italic_bold_14
-                        .copyWith(color: AppColors.black))),
-          ),
-        ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Ask Gemini AI anything",
+                style: AppTextStyles.italic_bold_16),
+            const SizedBox(height: 15),
+            _isLoading
+                ? const Center(child: AppLoading())
+                : AppTextfield(
+                    hintText: "Help me write...",
+                    obscureText: false,
+                    controller: queryController,
+                    longText: true,
+                    geminiAI: true,
+                  ),
+            Center(
+              child: OutlinedButton(
+                  onPressed: () => _submitQuery(),
+                  style: ButtonStyle(
+                      padding: WidgetStateProperty.all(const EdgeInsets.symmetric(
+                          horizontal: 25, vertical: 0)),
+                      side: const WidgetStatePropertyAll(BorderSide.none),
+                      backgroundColor:
+                          const WidgetStatePropertyAll(AppColors.periwinkle)),
+                  child: Text("Ask Gemini",
+                      style: AppTextStyles.italic_bold_14
+                          .copyWith(color: AppColors.black))),
+            ),
+          ],
+        ),
       ),
     );
   }

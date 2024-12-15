@@ -215,7 +215,7 @@ class ReviewItem extends StatelessWidget {
       ),
       subtitle: Text(
         review.comment,
-        style: AppTextStyles.regular_14,
+        style: AppTextStyles.regular_14.copyWith(fontSize: 13),
       ),
       trailing: Text(
         _formatTime(review.timestamp),

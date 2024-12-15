@@ -102,15 +102,16 @@ class BooksController {
         return;
       }
       final List<String> favouriteGenres = user.favouriteGenres;
-
-      yield* getBooks().asyncMap((books) {
-        return books
-            .where((book) =>
-                book.isPublished == true &&
-                book.genres?.any((genre) => favouriteGenres.contains(genre)) ==
-                    true)
-            .toList();
-      });
+      for (var genre in favouriteGenres) {
+        debugPrint('FAV GENRE: $genre');
+        yield* Stream.fromFuture(getBooks().first).asyncMap((books) {
+          return books
+              .where((book) =>
+                  book.isPublished == true &&
+                  book.genres?.contains(genre) == true)
+              .toList();
+        });
+      }
     } catch (e) {
       debugPrint('Error in getting favourite genre books: $e');
       yield [];
@@ -184,7 +185,7 @@ class BooksController {
     try {
       yield* getBooks().asyncMap((books) {
         final DateTime now = DateTime.now();
-        final DateTime oneWeekAgo = now.subtract(const Duration(days: 7));
+        final DateTime oneWeekAgo = now.subtract(const Duration(days: 9));
 
         return books.where((book) {
           DateTimeResult result = AppDate().parseDateTime(book.datePublished);
